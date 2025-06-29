@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paper.io Clone</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #051035;
+      width: 100vw;
+      height: 100vw;
+
+    }
+
+    canvas {
+      display: block;
+      margin: auto;
+      background-color: rgb(238, 170, 221);
+      border: 20px solid #000000;
+      width: 100vw;
+      box-sizing: border-box;
+    }
+
+    section {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      /* border: green 5px solid; */
+      justify-content: flex-start;
+      box-sizing: border-box;
+    }
+
+    .div1 {
+      justify-content: center;
+      align-items: center;
+      /* border: rgb(128, 77, 0) 5px solid; */
+      box-sizing: border-box;
+      margin: 20px;
+    }
+
+    #play {
+      background-color: rgb(8, 121, 8);
+      border: 1px white solid;
+      width: 120px;
+      height: 55px;
+      border-radius: 55px;
+      color: white;
+      font-size: 25px;
+      font-weight: 700;
+    }
+
+    #play:active {
+      transform: scale(0.90);
+      background-color: rgba(53, 163, 53, 0.938);
+
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="gameCanvas"></canvas>
+  <section>
+    <div class="div1"><button id="play" onclick="playbtn()">Play</button></div>
+  </section>
+
+
+
+  <script>
+    // Canvas setup
+    var canvas = document.getElementById("gameCanvas");
+    var ctx = canvas.getContext("2d");
+    let trainBox = 3; // Maximum length of the trail
+    const playbt = document.getElementById("play");
+    let a=0;
+
+    // Movement speed
+    let speed = 10;
+
+    function playbtn() {
+if(playbt.innerText == "Play"){
+  playbt.innerText = "Pause"
+  if(a==0){
+    dx = speed;
+  }else if( a==1){
+    dy = -speed;
+  }else if( a==2){
+    dx = speed;
+  }else if( a==3){
+    dy = speed;
+  }else if( a==4){
+    dx = -speed;
+  }
+}else{
+  playbt.innerText = "Play";
+  dx = 0;
+  dy = 0;
+}
+
+    };
+    
+    setInterval(function () {
+          update();
+          draw();
+        }, 200);
+
+
+    // Player starting position and size
+    var playerX = 50;
+    var playerY = 50;
+    var size = 10; // size of player block
+
+
+    // Direction (starts by moving right)
+    var dx = 0;
+    var dy = 0;
+
+    // Trail array to store the player's path
+    var trail = [];
+
+
+    let dot = {
+      x: Math.floor(Math.random() * (canvas.width / size)) * size,
+      y: Math.floor(Math.random() * (canvas.height / size)) * size
+    };
+
+    // Function to draw player and trail
+    function draw() {
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw the trail
+      ctx.fillStyle = "#5fa2fa";
+      for (var i = 0; i < trail.length; i++) {
+        var t = trail[i];
+        ctx.fillRect(t.x, t.y, size, size);
+      }
+
+      // Draw the player
+      ctx.fillStyle = "blue";
+      ctx.fillRect(playerX, playerY, size, size);
+
+      // Draw the dot
+      ctx.fillStyle = "red";
+      ctx.fillRect(dot.x, dot.y, size, size);
+    }
+
+    // Function to update player position
+    function update() {
+      // Move player
+      playerX += dx;
+      playerY += dy;
+
+      // Add current position to trail
+      trail.push({ x: playerX, y: playerY });
+
+      // If player goes outside canvas, stop the game
+      if (
+        playerX < 0 || playerX > canvas.width - size ||
+        playerY < 0 || playerY > canvas.height - size
+      ) {
+        alert("Game Over! You went out of bounds.");
+        playerX = 50; // Reset position
+        playerY = 50;
+        trail = []; // Clear trail
+        dx = speed; // Reset direction to right
+        dy = 0;
+        trainBox = 3; // Reset trail length limit
+        return;
+      }
+
+      // Limit the trail length to avoid memory issues
+      if (trail.length > trainBox) {
+        trail.shift(); // Remove the oldest position
+      }
+
+      // Check if player has reached the dot
+      if (playerX === dot.x && playerY === dot.y) {
+        // Generate a new dot position
+        dot.x = Math.floor(Math.random() * (canvas.width / size)) * size;
+        dot.y = Math.floor(Math.random() * (canvas.height / size)) * size;
+
+        // Increase the trail length limit
+        trainBox += 1; // Increase the maximum length of the trail
+      };
+    };
+
+    // Change direction on key press
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "ArrowUp" && dy === 0) {
+        dx = 0;
+        dy = -speed;
+        a = 1;
+      } else if (event.key === "ArrowDown" && dy === 0) {
+        dx = 0;
+        dy = speed;
+        a = 3;
+      } else if (event.key === "ArrowLeft" && dx === 0) {
+        dx = -speed;
+        dy = 0;
+        a = 4;
+      } else if (event.key === "ArrowRight" && dx === 0) {
+        dx = speed;
+        dy = 0;
+        a = 2;
+      }
+    });
+
+
+    let touchStartX = 0;
+let touchStartY = 0;
+
+document.addEventListener("touchstart", function (event) {
+  touchStartX = event.touches[0].clientX;
+  touchStartY = event.touches[0].clientY;
+});
+
+document.addEventListener("touchend", function (event) {
+  let touchEndX = event.changedTouches[0].clientX;
+  let touchEndY = event.changedTouches[0].clientY;
+
+  let dxSwipe = touchEndX - touchStartX;
+  let dySwipe = touchEndY - touchStartY;
+
+  if (Math.abs(dxSwipe) > Math.abs(dySwipe)) {
+    // Horizontal swipe
+    if (dxSwipe > 0 && dx === 0) {
+      dx = speed;
+      dy = 0;
+    } else if (dxSwipe < 0 && dx === 0) {
+      dx = -speed;
+      dy = 0;
+    }
+  } else {
+    // Vertical swipe
+    if (dySwipe > 0 && dy === 0) {
+      dx = 0;
+      dy = speed;
+    } else if (dySwipe < 0 && dy === 0) {
+      dx = 0;
+      dy = -speed;
+    }
+  }
+});
+
+    // Game loop
+  </script>
+</body>
+
+</html>
