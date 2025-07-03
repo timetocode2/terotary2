@@ -22,6 +22,7 @@
       overscroll-behavior: contain;
       touch-action: none;
       /* Optional: stops touch scrolling */
+      user-select:  none;
     }
 
     canvas {
@@ -38,15 +39,14 @@
       height: 100vh;
       display: flex;
       flex-direction: column;
-      border: green 5px solid;
+      border: rgb(0, 0, 0) 8px solid;
       justify-content: flex-start;
       box-sizing: border-box;
     }
 
-    .div1 {
-      justify-content: center;
+    .section1 {
       align-items: center;
-      border: rgb(128, 77, 0) 5px solid;
+      /* border: rgb(128, 77, 0) 5px solid; */
       box-sizing: border-box;
       margin: 20px;
       display: flex;
@@ -54,7 +54,7 @@
       gap: 20px;
     }
 
-    .diver1 {
+    .sec1 {
       background-color: rgb(8, 121, 8);
       border: 1px white solid;
       width: 120px;
@@ -64,17 +64,28 @@
       font-size: 25px;
       font-weight: 700;
     }
+    .mode {
+      background-color: rgba(134, 0, 211, 0.445);
+      border: 1px white solid;
+      width: 110px;
+      height: 51px;
+      border-radius: 55px;
+      color: white;
+      font-size: 22px;
+      font-weight: 300;
+    }
 
-    .diver1:active {
+    .sec1:active {
       transform: scale(0.90);
-      background-color: rgba(53, 163, 53, 0.938);
+      background-color: rgba(77, 194, 77, 0.938);
+      box-shadow: white 2px 2px 5px;
 
     }
 
     .div2 {
       color: white;
       font-size: 24px;
-      font-weight: 300;
+      font-weight: 25px;
       margin-top: 5px;
       background-color: rgba(53, 163, 53, 0.226);
       padding-left: 20px;
@@ -86,17 +97,16 @@
     .score {
       color: rgb(255, 255, 0);
       border: 0.01px white solid;
-      font-size: 200px;
+      font-size: 25px;
       font-weight: 700;
-      display: inline-block;
+      display: flex;
+      /* justify-content: center; */
+      align-items: center;
       margin-left: 10px;
       width: 30%;
       height: 100%;
     }
 
-    #restart {
-      display: none;
-    }
 
     span {
       color: white;
@@ -104,7 +114,7 @@
       font-weight: 300;
       margin-top: 5px;
       padding-left: 10px;
-      border: blue 1px solid;
+      /* border: blue 1px solid; */
       width: 50%;
     }
 
@@ -114,7 +124,7 @@
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      border: red 1px solid;
+      /* border: red 1px solid; */
       justify-content: flex-start;
       box-sizing: border-box;
     }
@@ -124,16 +134,17 @@
 <body>
   <canvas id="gameCanvas"></canvas>
   <section class="main">
-    <div class="div1">
-      <button id="play" class="diver1" onclick="playbtn()">Play</button>
-      <button id="restart" class="diver1" onclick="restart()">Re-play</button>
-    </div>
+    <section class="section1">
+      <button id="play" class="sec1" onclick="playbtn()">Play</button>
+      <button id="restart" class="mode" onclick="restart()">Re-play</button>
+      <button id="mode" class="mode" onclick="mode()">Mode ></button>
+    </section>
     <section class="section">
       <div class="div2" id="div2"><span>Current Score </span> :- <div class="score" id="score"></div>
       </div>
-      <div class="div2" id="div2"><span>Highest Score </span> :- <div class="score" id="score"></div>
+      <div class="div2" id="div3"><span>Highest Score </span> :- <div class="score" id="score2"></div>
       </div>
-      <div class="div2" id="div2"><span>Last H. Score </span> :- <div class="score" id="score"></div>
+      <div class="div2" id="div4"><span>Last H. Score </span> :- <div class="score" id="score3"></div>
       </div>
     </section>
     <section class="section"></section>
